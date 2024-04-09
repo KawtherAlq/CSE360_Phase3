@@ -1,30 +1,42 @@
 package application;
 
-import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
 
-public class SignUp extends Application {
+public class SignUp {
+    private Stage stage;
+    private Runnable onSignInRequested; // This Runnable will be used to switch back to the SignIn page
 
-    public static void main(String[] args) {
-        launch(args);
+    public SignUp(Stage stage, Runnable onSignInRequested) {
+        this.stage = stage;
+        this.onSignInRequested = onSignInRequested;
     }
 
-    @Override
-    public void start(Stage primaryStage) {
-        primaryStage.setTitle("HealHub Sign-Up");
-
-        // Create the left side of the split
+    public Scene getScene(Main mainApp) {
         VBox leftSide = new VBox();
         leftSide.setMinWidth(200);
         leftSide.setBackground(new Background(new BackgroundFill(Color.rgb(243, 222, 213), CornerRadii.EMPTY, Insets.EMPTY)));
+        
+        Image logoImage = new Image(getClass().getResourceAsStream("logo.png"));
+        ImageView logoView = new ImageView(logoImage);
 
-        // Create the right side of the split
+//        // Optionally, set the size of the logo
+        logoView.setFitHeight(200); // Set height
+        logoView.setPreserveRatio(true); // Preserve ratio
+        VBox.setMargin(logoView, new Insets(180, 100, 20, 30));
+        leftSide.getChildren().add(logoView);
+        
         VBox rightSide = new VBox(10);
         rightSide.setAlignment(Pos.CENTER);
         rightSide.setPadding(new Insets(10, 10, 10, 10));
@@ -71,28 +83,50 @@ public class SignUp extends Application {
             String name = nameField.getText();
             String email = emailField.getText();
             String password = passwordField.getText();
-        });
+            
+            // Check if all fields are filled
+            if (!name.isEmpty() && !email.isEmpty() && !password.isEmpty()) {
+                String userInfo = String.format("Name: %s, Email: %s, Password: %s%n", name, email, password);
 
-        Hyperlink signInLink = new Hyperlink("Already have an account? Sign In");
-        signInLink.setOnAction(e -> {
-            Main signInPage = new Main();
-            try {
-                signInPage.start(primaryStage);
-            } catch (Exception ex) {
-                ex.printStackTrace();
+                try {
+                    String filePath = "users.txt";
+                    
+                    Files.write(Paths.get(filePath), userInfo.getBytes(), StandardOpenOption.CREATE, StandardOpenOption.APPEND);
+                    
+                    showAlert(Alert.AlertType.INFORMATION, "Registration Successful", "Your information has been saved.");
+                
+                if (onSignInRequested != null) {
+                    onSignInRequested.run();
+                }
+                }
+                catch (IOException ex) {
+                	
+                    ex.printStackTrace();
+                    // Show error alert
+                    showAlert(Alert.AlertType.ERROR, "Error", "Failed to Signup");
+                }
+            } else {
+                showAlert(Alert.AlertType.WARNING,  "Incomplete", "Please fill in all fields.");
             }
-            //signin logic
         });
+        
 
-        rightSide.getChildren().addAll(signUpLabel, roleBox, gridPane, signUpButton, signInLink);
-
-        // Create the HBox and add the left and right sides
+        rightSide.getChildren().addAll(signUpLabel, roleBox, gridPane, signUpButton);
+        
+        
         HBox hbox = new HBox();
         hbox.setFillHeight(true);
         hbox.getChildren().addAll(leftSide, rightSide);
-
-        Scene scene = new Scene(hbox, 800, 600);
-        primaryStage.setScene(scene);
-        primaryStage.show();
+        return new Scene(hbox, 800, 600);
     }
-}
+        
+    private void showAlert(Alert.AlertType alertType, String title, String content) {
+        Alert alert = new Alert(alertType);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(content);
+        alert.showAndWait();
+    }
+  
+        }
+    
