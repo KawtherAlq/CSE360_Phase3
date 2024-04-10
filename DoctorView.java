@@ -1,17 +1,22 @@
+package application;
+
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
+
+
 
 public class DoctorView extends Application {
     @Override
     public void start(Stage primaryStage) {
         primaryStage.setTitle("Doctor's View");
 
-        Button notificationsButton = new Button("!");
-        notificationsButton.setLayoutX(10);
-        notificationsButton.setLayoutY(10);
+        Button notificationButton = new Button("!");
+        notificationButton.setLayoutX(10);
+        notificationButton.setLayoutY(10);
 
         ComboBox<String> selectPatientComboBox = new ComboBox<>();
         selectPatientComboBox.getItems().addAll("Patient 1", "Patient 2", "Patient 3");
@@ -88,7 +93,7 @@ public class DoctorView extends Application {
         Pane topPane = new Pane();
         topPane.setStyle("-fx-background-color: #F4DED6;");
         topPane.setPrefHeight(225);
-        topPane.getChildren().addAll(notificationsButton, selectPatientComboBox, nameLabel, nameField, emailLabel, emailField, phoneLabel, phoneField, addressLabel, callLabel, callButton, addressField, doctorNameLabel);
+        topPane.getChildren().addAll(notificationButton, selectPatientComboBox, nameLabel, nameField, emailLabel, emailField, phoneLabel, phoneField, addressLabel, callLabel, callButton, addressField, doctorNameLabel);
 
         Pane bottomPane = new Pane();
         bottomPane.setStyle("-fx-background-color: #B1D3FB;");
@@ -97,6 +102,25 @@ public class DoctorView extends Application {
 
         VBox mainPane = new VBox();
         mainPane.getChildren().addAll(topPane, bottomPane);
+        
+        notificationButton.setOnAction(e -> {
+            VBox popUpWindow = new VBox(10);
+            TextArea messageTextArea = new TextArea();
+            messageTextArea.setPrefWidth(400);
+            messageTextArea.setPrefHeight(200);
+            Button sendButton = new Button("Send");
+            sendButton.setOnAction(event -> {
+                //String message = messageTextArea.getText();
+                messageTextArea.clear();
+            });
+            popUpWindow.getChildren().addAll(messageTextArea, sendButton);
+            Scene popup = new Scene(popUpWindow, 420, 205);
+            Stage window = new Stage();
+            window.setScene(popup);
+            window.initModality(Modality.APPLICATION_MODAL);
+            window.setTitle("Doctor's Messages");
+            window.show();
+        });
 
         Scene scene = new Scene(mainPane, 800, 500);
         primaryStage.setScene(scene);
@@ -107,4 +131,3 @@ public class DoctorView extends Application {
         launch(args);
     }
 }
-

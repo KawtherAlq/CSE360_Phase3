@@ -1,16 +1,15 @@
+package application;
+
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import javafx.scene.control.Button;
 import javafx.scene.layout.StackPane;
-import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
-import javafx.scene.control.TextField;
 import javafx.event.ActionEvent;
 import javafx.geometry.Pos;
 import javafx.scene.text.Text;
@@ -200,15 +199,23 @@ private StackPane Nurse(Stage primaryStage) {
 	VBox mainPane = new VBox();
 	mainPane.getChildren().addAll(topPane, bottomPane);
 	
-	notificationButton.setOnAction(e -> {
-		VBox popUpWindow = new VBox(10);
-		popUpWindow.getChildren().add(new Label(""));
-	    Scene popup = new Scene(popUpWindow, 420, 105);
-	    Stage window = new Stage();
-	    window.setScene(popup);
-	    window.initModality(Modality.APPLICATION_MODAL);
-		window.setTitle("Nurse's Notifications");
-		window.show();
+    notificationButton.setOnAction(e -> {
+        VBox popUpWindow = new VBox(10);
+        TextArea messageTextArea = new TextArea();
+        messageTextArea.setPrefWidth(400);
+        messageTextArea.setPrefHeight(200);
+        Button sendButton = new Button("Send");
+        sendButton.setOnAction(event -> {
+            //String message = messageTextArea.getText();
+            messageTextArea.clear();
+        });
+        popUpWindow.getChildren().addAll(messageTextArea, sendButton);
+        Scene popup = new Scene(popUpWindow, 420, 205);
+        Stage window = new Stage();
+        window.setScene(popup);
+        window.initModality(Modality.APPLICATION_MODAL);
+        window.setTitle("Nurse's Messages");
+        window.show();
     });
 	
 	callButton.setOnAction(e -> {
