@@ -1,13 +1,9 @@
-package application;
-
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-
-
 
 public class DoctorView extends Application {
     @Override
@@ -85,9 +81,17 @@ public class DoctorView extends Application {
 
         Button finishedButton = new Button("Finished");
 
+
+        Button backButton = new Button("back");
+   //   backButton.setStyle("-fx-background-color: #B1D3FB");
+        backButton.setOnAction(e -> {
+        SignIn signInPage = new SignIn();
+        signInPage.showPortal(primaryStage);
+    });
+
         HBox buttonsBox = new HBox(10); // Spacing between buttons
-        buttonsBox.getChildren().addAll(saveButton, finishedButton);
-        buttonsBox.setLayoutX(590);
+        buttonsBox.getChildren().addAll(backButton, saveButton, finishedButton);
+        buttonsBox.setLayoutX(560);
         buttonsBox.setLayoutY(260);
 
         Pane topPane = new Pane();

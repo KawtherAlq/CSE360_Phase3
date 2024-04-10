@@ -1,5 +1,3 @@
-package application;
-
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
@@ -63,23 +61,30 @@ public class PatientView extends Application {
         DatePicker appointmentPicker = new DatePicker();
 
         VBox appointmentBox = new VBox(10, appointmentLabel, upcomingCheckbox, pastCheckbox, scheduleCheckbox, appointmentPicker);
-        appointmentBox.setLayoutX(1350);
+        appointmentBox.setLayoutX(870);
         appointmentBox.setLayoutY(10);
 
         Label medicalHistoryLabel = new Label("Medical History: ");
         medicalHistoryLabel.setStyle("-fx-font-size: 18px; -fx-font-weight: bold; -fx-alignment: center;");
         Label allergiesLabel = new Label("Allergies: ");
         TextArea allergiesTextArea = new TextArea();
-        allergiesTextArea.setPrefSize(500, 150); // Set preferred width and height
+        allergiesTextArea.setPrefSize(500, 125); // Set preferred width and height
         Label prescriptionLabel = new Label("Prescription: ");
         TextArea prescriptionTextArea = new TextArea();
-        prescriptionTextArea.setPrefSize(500, 150); // Set preferred width and height
+        prescriptionTextArea.setPrefSize(500, 125); // Set preferred width and height
         Label injuriesLabel = new Label("Injuries: ");
         TextArea injuriesTextArea = new TextArea();
-        injuriesTextArea.setPrefSize(500, 150); // Set preferred width and height
+        injuriesTextArea.setPrefSize(500, 125); // Set preferred width and height
+
+        Button backButton = new Button("back");
+   //   backButton.setStyle("-fx-background-color: #B1D3FB");
+        backButton.setOnAction(e -> {
+        SignIn signInPage = new SignIn();
+        signInPage.showPortal(primaryStage);
+    });
 
         VBox medicalHistoryBox = new VBox(10, medicalHistoryLabel, allergiesLabel, allergiesTextArea, prescriptionLabel,
-                prescriptionTextArea, injuriesLabel, injuriesTextArea);
+                prescriptionTextArea, injuriesLabel, injuriesTextArea, backButton);
         medicalHistoryBox.setLayoutX(10);
         medicalHistoryBox.setLayoutY(0);
 
@@ -89,16 +94,16 @@ public class PatientView extends Application {
         TextArea chatTextArea = new TextArea();
         chatTextArea.setPrefSize(250, 225);
         VBox chatBox = new VBox(10, chatLabel, chatTextArea);
-        chatBox.setLayoutX(650);
+        chatBox.setLayoutX(480);
         chatBox.setLayoutY(10);
 
         // Create Lab Results VBox
         Label labResultsLabel = new Label("Lab Results");
         labResultsLabel.setStyle("-fx-font-size: 18px; -fx-font-weight: bold; -fx-alignment: center;");
         TextArea labResultsTextArea = new TextArea();
-        labResultsTextArea.setPrefSize(800, 525);
+        labResultsTextArea.setPrefSize(465, 525);
         VBox labResultsBox = new VBox(10, labResultsLabel, labResultsTextArea);
-        labResultsBox.setLayoutX(700);
+        labResultsBox.setLayoutX(580);
         labResultsBox.setLayoutY(10);
 
         Pane topPane = new Pane();
@@ -113,7 +118,7 @@ public class PatientView extends Application {
 
         VBox vbox = new VBox(topPane, bottomPane);
 
-        Scene scene = new Scene(vbox, 800, 500); // Adjusted scene width for better visibility
+        Scene scene = new Scene(vbox, 1056, 864); // Adjusted scene width for better visibility
         primaryStage.setScene(scene);
         primaryStage.show();
     }
