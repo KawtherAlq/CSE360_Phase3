@@ -26,7 +26,7 @@ public class SignUp extends Application {
 
         VBox leftSide = new VBox();
         leftSide.setMinWidth(200);
-        leftSide.setBackground(new Background(new BackgroundFill(Color.rgb(243, 22, 213), CornerRadii.EMPTY, Insets.EMPTY)));
+        leftSide.setBackground(new Background(new BackgroundFill(Color.rgb(243, 222, 213), CornerRadii.EMPTY, Insets.EMPTY)));
 
         VBox rightSide = new VBox(10);
         rightSide.setAlignment(Pos.CENTER);

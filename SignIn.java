@@ -26,7 +26,7 @@ public class SignIn extends Application {
 
         VBox leftSide = new VBox();
         leftSide.setMinWidth(200);
-        leftSide.setBackground(new Background(new BackgroundFill(Color.rgb(243, 22, 213), CornerRadii.EMPTY, Insets.EMPTY)));
+        leftSide.setBackground(new Background(new BackgroundFill(Color.rgb(243, 222, 213), CornerRadii.EMPTY, Insets.EMPTY)));
 
         VBox rightSide = new VBox(10);
         rightSide.setAlignment(Pos.CENTER);
@@ -115,6 +115,7 @@ public class SignIn extends Application {
 
     void showPortal(Stage primaryStage) {
         Button doctorsPortalButton = new Button("Doctor's Portal");
+        doctorsPortalButton.setStyle("-fx-background-color: #B1D3FB");
         doctorsPortalButton.setOnAction(e -> {
             DoctorView doctorView = new DoctorView();
             try {
@@ -125,9 +126,18 @@ public class SignIn extends Application {
         });
 
         Button nursesPortalButton = new Button("Nurse's Portal");
-        // Set action for Nurse's Portal button if needed
+        nursesPortalButton.setStyle("-fx-background-color: #B1D3FB");
+        nursesPortalButton.setOnAction(e -> {
+            NurseView nurseView = new NurseView();
+            try {
+                nurseView.start(primaryStage);
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        });
 
         Button patientsPortalButton = new Button("Patient's Portal");
+        patientsPortalButton.setStyle("-fx-background-color: #B1D3FB");
         patientsPortalButton.setOnAction(e -> {
             PatientView patientView = new PatientView();
             try {
@@ -138,9 +148,18 @@ public class SignIn extends Application {
         });
 
         VBox portalButtons = new VBox(20, doctorsPortalButton, nursesPortalButton, patientsPortalButton);
+        portalButtons.setPrefHeight(50);
+        portalButtons.setPrefWidth(200);
         portalButtons.setAlignment(Pos.CENTER);
 
-        Scene portalScene = new Scene(portalButtons, 400, 300);
+        doctorsPortalButton.setMinWidth(portalButtons.getPrefWidth());
+        doctorsPortalButton.setMinHeight(portalButtons.getPrefHeight());
+        nursesPortalButton.setMinWidth(portalButtons.getPrefWidth());
+        nursesPortalButton.setMinHeight(portalButtons.getPrefHeight());
+        patientsPortalButton.setMinWidth(portalButtons.getPrefWidth());
+        patientsPortalButton.setMinHeight(portalButtons.getPrefHeight());
+
+        Scene portalScene = new Scene(portalButtons, 600, 400);
         primaryStage.setScene(portalScene);
         primaryStage.setTitle("Portal Selection");
     }
