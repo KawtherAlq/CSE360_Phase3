@@ -1,14 +1,28 @@
+package application;
+
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+
 import javafx.application.Application;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
+
+
 public class DoctorView extends Application {
+	 private static final String CHAT_FILE = "chat.txt";
+	 
     @Override
     public void start(Stage primaryStage) {
         primaryStage.setTitle("Doctor's View");
+        //private static final String CHAT_FILE = "chat.txt";
 
         Button notificationButton = new Button("!");
         notificationButton.setLayoutX(10);
@@ -81,17 +95,9 @@ public class DoctorView extends Application {
 
         Button finishedButton = new Button("Finished");
 
-
-        Button backButton = new Button("back");
-   //   backButton.setStyle("-fx-background-color: #B1D3FB");
-        backButton.setOnAction(e -> {
-        SignIn signInPage = new SignIn();
-        signInPage.showPortal(primaryStage);
-    });
-
         HBox buttonsBox = new HBox(10); // Spacing between buttons
-        buttonsBox.getChildren().addAll(backButton, saveButton, finishedButton);
-        buttonsBox.setLayoutX(560);
+        buttonsBox.getChildren().addAll(saveButton, finishedButton);
+        buttonsBox.setLayoutX(590);
         buttonsBox.setLayoutY(260);
 
         Pane topPane = new Pane();
@@ -107,28 +113,52 @@ public class DoctorView extends Application {
         VBox mainPane = new VBox();
         mainPane.getChildren().addAll(topPane, bottomPane);
         
-        notificationButton.setOnAction(e -> {
-            VBox popUpWindow = new VBox(10);
-            TextArea messageTextArea = new TextArea();
-            messageTextArea.setPrefWidth(400);
-            messageTextArea.setPrefHeight(200);
+        notificationButton.setOnAction(event -> {
+            Stage chatStage = new Stage();
+            chatStage.setTitle("Chat with Doctor");
+            VBox chatLayout = new VBox(10);
+            TextArea chatHistoryTextArea = new TextArea();
+            chatHistoryTextArea.setEditable(false);
+            TextField chatInputField = new TextField();
             Button sendButton = new Button("Send");
-            sendButton.setOnAction(event -> {
-                //String message = messageTextArea.getText();
-                messageTextArea.clear();
+            sendButton.setOnAction(e -> {
+                String message = chatInputField.getText();
+                try (BufferedWriter writer = new BufferedWriter(new FileWriter(CHAT_FILE, true))) {
+                    writer.write("Doctor: " + message);
+                    writer.newLine();
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                }
+
+                if (!message.isEmpty()) {
+                    chatHistoryTextArea.appendText("Doctor: " + message + "\n");
+                    chatInputField.clear();
+                }
             });
-            popUpWindow.getChildren().addAll(messageTextArea, sendButton);
-            Scene popup = new Scene(popUpWindow, 420, 205);
-            Stage window = new Stage();
-            window.setScene(popup);
-            window.initModality(Modality.APPLICATION_MODAL);
-            window.setTitle("Doctor's Messages");
-            window.show();
+            chatLayout.getChildren().addAll(chatHistoryTextArea, chatInputField, sendButton);
+            chatLayout.setAlignment(Pos.CENTER);
+            Scene chatScene = new Scene(chatLayout, 400, 300);
+            chatStage.setScene(chatScene);
+            chatStage.initModality(Modality.APPLICATION_MODAL);
+            chatStage.show();
         });
 
         Scene scene = new Scene(mainPane, 800, 500);
         primaryStage.setScene(scene);
         primaryStage.show();
+    }
+
+    private void loadChatHistory(TextArea chatTextArea) {
+        try (BufferedReader reader = new BufferedReader(new FileReader(CHAT_FILE))) {
+            String line;
+            StringBuilder chatHistory = new StringBuilder();
+            while ((line = reader.readLine()) != null) {
+                chatHistory.append(line).append("\n");
+            }
+            chatTextArea.setText(chatHistory.toString());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public static void main(String[] args) {
