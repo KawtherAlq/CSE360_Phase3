@@ -6,17 +6,14 @@ import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
+
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
 
 public class SignUp extends Application {
 
-    private Main main;
-
-    public SignUp(Main main) {
-        this.main = main;
-    }
+    private static final String USER_DATA_FILE = "userdata.txt";
 
     public static void main(String[] args) {
         launch(args);
@@ -25,13 +22,12 @@ public class SignUp extends Application {
     @Override
     public void start(Stage primaryStage) {
         primaryStage.setTitle("HealHub Sign-Up");
+        
 
-        // Create the left side of the split
         VBox leftSide = new VBox();
         leftSide.setMinWidth(200);
-        leftSide.setBackground(new Background(new BackgroundFill(Color.rgb(243, 222, 213), CornerRadii.EMPTY, Insets.EMPTY)));
+        leftSide.setBackground(new Background(new BackgroundFill(Color.rgb(243, 22, 213), CornerRadii.EMPTY, Insets.EMPTY)));
 
-        // Create the right side of the split
         VBox rightSide = new VBox(10);
         rightSide.setAlignment(Pos.CENTER);
         rightSide.setPadding(new Insets(10, 10, 10, 10));
@@ -39,16 +35,6 @@ public class SignUp extends Application {
         rightSide.setBackground(new Background(new BackgroundFill(Color.WHITE, CornerRadii.EMPTY, Insets.EMPTY)));
 
         Label signUpLabel = new Label("Sign Up");
-
-        HBox roleBox = new HBox(10);
-        roleBox.setAlignment(Pos.CENTER);
-        Button patientButton = new Button("Patient");
-        patientButton.setStyle("-fx-background-color: #B1D3FB");
-        Button doctorButton = new Button("Doctor");
-        doctorButton.setStyle("-fx-background-color: #B1D3FB");
-        Button nurseButton = new Button("Nurse");
-        nurseButton.setStyle("-fx-background-color: #B1D3FB");
-        roleBox.getChildren().addAll(patientButton, doctorButton, nurseButton);
 
         GridPane gridPane = new GridPane();
         gridPane.setVgap(5);
@@ -75,63 +61,62 @@ public class SignUp extends Application {
         gridPane.add(passwordField, 1, 2);
 
         Button signUpButton = new Button("Sign Up");
-        signUpButton.setStyle("-fx-background-color: #B1D3FB"); // Baby blue
+        signUpButton.setStyle("-fx-background-color: #B1D3FB");
         signUpButton.setOnAction(e -> {
             String name = nameField.getText();
             String email = emailField.getText();
             String password = passwordField.getText();
-
-            // Check if any field is empty
             if (name.isEmpty() || email.isEmpty() || password.isEmpty()) {
-                showErrorAlert("All fields are required!");
-                return;
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Error");
+                alert.setHeaderText(null);
+                alert.setContentText("Please fill in all the required fields.");
+                alert.showAndWait();
+            } else {
+                writeUserData(name, email, password);
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setTitle("Success");
+                alert.setHeaderText(null);
+                alert.setContentText("Congratulations, your account has been successfully created.");
+                alert.showAndWait();
+                System.out.println("Successfully signed up.");
             }
+        });
 
-            // Write user information to a file
-            try (BufferedWriter writer = new BufferedWriter(new FileWriter("user_info.txt", true))) {
-                writer.write(name + "," + email + "," + password + System.lineSeparator());
-                writer.flush();
-            } catch (IOException ex) {
-                showErrorAlert("Failed to save user information!");
-                ex.printStackTrace();
-                return;
-            }
-
-            // Inform the user that sign up was successful
-            Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.setTitle("Success");
-            alert.setHeaderText(null);
-            alert.setContentText("Sign up successful!");
-            alert.showAndWait();
-
-            // Clear fields
-            nameField.clear();
-            emailField.clear();
-            passwordField.clear();
+        Button backButton = new Button("Back");
+        backButton.setStyle("-fx-background-color: #B1D3FB");
+        backButton.setOnAction(e -> {
+            SignIn signInPage = new SignIn();
+            signInPage.start(primaryStage);
         });
 
         Hyperlink signInLink = new Hyperlink("Already have an account? Sign In");
         signInLink.setOnAction(e -> {
-            main.start(primaryStage); // Back to sign-in page
+            SignIn signInPage = new SignIn();
+            try {
+                signInPage.start(primaryStage);
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
         });
 
-        rightSide.getChildren().addAll(signUpLabel, roleBox, gridPane, signUpButton, signInLink);
+        rightSide.getChildren().addAll(signUpLabel, gridPane, signUpButton, signInLink, backButton);
 
-        // Create the HBox and add the left and right sides
         HBox hbox = new HBox();
         hbox.setFillHeight(true);
         hbox.getChildren().addAll(leftSide, rightSide);
 
-        Scene scene = new Scene(hbox, 800, 600);
+        Scene scene = new Scene(hbox, 600, 400);
         primaryStage.setScene(scene);
         primaryStage.show();
     }
 
-    private void showErrorAlert(String message) {
-        Alert alert = new Alert(Alert.AlertType.ERROR);
-        alert.setTitle("Error");
-        alert.setHeaderText(null);
-        alert.setContentText(message);
-        alert.showAndWait();
+    private void writeUserData(String name, String email, String password) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(USER_DATA_FILE, true))) {
+            writer.write(name + "," + email + "," + password);
+            writer.newLine();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }
