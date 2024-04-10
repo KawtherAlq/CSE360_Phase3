@@ -65,16 +65,16 @@ public class PatientView extends Application {
         appointmentBox.setLayoutY(10);
 
         Label medicalHistoryLabel = new Label("Medical History: ");
-        medicalHistoryLabel.setStyle("-fx-font-size: 18px; -fx-font-weight: bold; -fx-alignment: center;");
+        medicalHistoryLabel.setStyle("-fx-font-size: 16px; -fx-font-weight: bold; -fx-alignment: center;");
         Label allergiesLabel = new Label("Allergies: ");
         TextArea allergiesTextArea = new TextArea();
-        allergiesTextArea.setPrefSize(500, 125); // Set preferred width and height
+        allergiesTextArea.setPrefSize(500, 100); // Set preferred width and height
         Label prescriptionLabel = new Label("Prescription: ");
         TextArea prescriptionTextArea = new TextArea();
-        prescriptionTextArea.setPrefSize(500, 125); // Set preferred width and height
+        prescriptionTextArea.setPrefSize(500, 100); // Set preferred width and height
         Label injuriesLabel = new Label("Injuries: ");
         TextArea injuriesTextArea = new TextArea();
-        injuriesTextArea.setPrefSize(500, 125); // Set preferred width and height
+        injuriesTextArea.setPrefSize(500, 100); // Set preferred width and height
 
         Button backButton = new Button("back");
    //   backButton.setStyle("-fx-background-color: #B1D3FB");
@@ -99,26 +99,26 @@ public class PatientView extends Application {
 
         // Create Lab Results VBox
         Label labResultsLabel = new Label("Lab Results");
-        labResultsLabel.setStyle("-fx-font-size: 18px; -fx-font-weight: bold; -fx-alignment: center;");
+        labResultsLabel.setStyle("-fx-font-size: 16px; -fx-font-weight: bold; -fx-alignment: center;");
         TextArea labResultsTextArea = new TextArea();
-        labResultsTextArea.setPrefSize(465, 525);
+        labResultsTextArea.setPrefSize(465, 430);
         VBox labResultsBox = new VBox(10, labResultsLabel, labResultsTextArea);
         labResultsBox.setLayoutX(580);
         labResultsBox.setLayoutY(10);
 
         Pane topPane = new Pane();
         topPane.setStyle("-fx-background-color: #F4DED6;");
-        topPane.setPrefHeight(300);
+        topPane.setPrefHeight(350);
         topPane.getChildren().addAll(contactInfoBox, personalInfoBox, appointmentBox, buttonsBox, chatBox);
 
         Pane bottomPane = new Pane();
         bottomPane.setStyle("-fx-background-color: #B1D3FB;");
-        bottomPane.setPrefHeight(600);
+        bottomPane.setPrefHeight(550);
         bottomPane.getChildren().addAll(medicalHistoryBox, labResultsBox);
 
         VBox vbox = new VBox(topPane, bottomPane);
 
-        Scene scene = new Scene(vbox, 1056, 864); // Adjusted scene width for better visibility
+        Scene scene = new Scene(vbox, 1056, 768); // Adjusted scene width for better visibility
         primaryStage.setScene(scene);
         primaryStage.show();
     }
