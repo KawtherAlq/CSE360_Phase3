@@ -1,3 +1,5 @@
+package application;
+
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
@@ -111,7 +113,7 @@ public class PatientView extends Application {
 
         VBox vbox = new VBox(topPane, bottomPane);
 
-        Scene scene = new Scene(vbox, 1200, 500); // Adjusted scene width for better visibility
+        Scene scene = new Scene(vbox, 800, 500); // Adjusted scene width for better visibility
         primaryStage.setScene(scene);
         primaryStage.show();
     }
