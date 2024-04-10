@@ -1,3 +1,5 @@
+package application;
+
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -106,7 +108,7 @@ public class SignUp extends Application {
         hbox.setFillHeight(true);
         hbox.getChildren().addAll(leftSide, rightSide);
 
-        Scene scene = new Scene(hbox, 600, 400);
+        Scene scene = new Scene(hbox, 800, 500);
         primaryStage.setScene(scene);
         primaryStage.show();
     }

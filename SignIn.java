@@ -1,3 +1,5 @@
+package application;
+
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -159,7 +161,7 @@ public class SignIn extends Application {
         patientsPortalButton.setMinWidth(portalButtons.getPrefWidth());
         patientsPortalButton.setMinHeight(portalButtons.getPrefHeight());
 
-        Scene portalScene = new Scene(portalButtons, 600, 400);
+        Scene portalScene = new Scene(portalButtons, 800, 500);
         primaryStage.setScene(portalScene);
         primaryStage.setTitle("Portal Selection");
     }
