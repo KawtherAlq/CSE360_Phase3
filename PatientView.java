@@ -5,6 +5,13 @@ import javafx.scene.layout.*;
 import javafx.stage.Stage;
 
 public class PatientView extends Application {
+    private TextField nameField;
+    private TextField emailField;
+    private TextField phoneField;
+    private TextField addressField;
+    private TextField emergencyContactField;
+    private DatePicker dobPicker;
+
     @Override
     public void start(Stage primaryStage) {
         primaryStage.setTitle("Patient's View");
@@ -17,25 +24,31 @@ public class PatientView extends Application {
         contactInfoBox.setLayoutY(10);
 
         Label nameLabel = new Label("Name: ");
-        TextField nameField = new TextField();
+        nameField = new TextField();
+        nameField.setDisable(true);
 
         Label emailLabel = new Label("Email: ");
-        TextField emailField = new TextField();
+        emailField = new TextField();
+        emailField.setDisable(true);
 
         Label phoneLabel = new Label("Phone: ");
-        TextField phoneField = new TextField();
+        phoneField = new TextField();
+        phoneField.setDisable(true);
 
         VBox personalInfoLeft = new VBox(10);
         personalInfoLeft.getChildren().addAll(nameLabel, nameField, emailLabel, emailField, phoneLabel, phoneField);
 
         Label addressLabel = new Label("Address: ");
-        TextField addressField = new TextField();
+        addressField = new TextField();
+        addressField.setDisable(true);
 
         Label emergencyContactLabel = new Label("Emergency Contact: ");
-        TextField emergencyContactField = new TextField();
+        emergencyContactField = new TextField();
+        emergencyContactField.setDisable(true);
 
         Label dobLabel = new Label("DOB: ");
-        DatePicker dobPicker = new DatePicker();
+        dobPicker = new DatePicker();
+        dobPicker.setDisable(true);
 
         VBox personalInfoRight = new VBox(10);
         personalInfoRight.getChildren().addAll(addressLabel, addressField, emergencyContactLabel, emergencyContactField, dobLabel, dobPicker);
@@ -46,11 +59,35 @@ public class PatientView extends Application {
         personalInfoBox.setLayoutY(50);
 
         Button editButton = new Button("Edit");
-        Button billingButton = new Button("Billing");
+        editButton.setOnAction(e -> {
+            // Enable text fields when the "Edit" button is clicked
+            nameField.setDisable(false);
+            emailField.setDisable(false);
+            phoneField.setDisable(false);
+            addressField.setDisable(false);
+            emergencyContactField.setDisable(false);
+            dobPicker.setDisable(false);
+        });
 
-        HBox buttonsBox = new HBox(150);
-        buttonsBox.getChildren().addAll(editButton, billingButton);
-        buttonsBox.setLayoutX(60);
+        Button doneButton = new Button("Done");
+        doneButton.setOnAction(e -> {
+            nameField.setDisable(true);
+            emailField.setDisable(true);
+            phoneField.setDisable(true);
+            addressField.setDisable(true);
+            emergencyContactField.setDisable(true);
+            dobPicker.setDisable(true);
+        });
+
+        Button billingButton = new Button("Billing"); 
+        HBox bill = new HBox();
+        bill.getChildren().addAll(billingButton);
+        bill.setLayoutX(240);
+        bill.setLayoutY(250);
+
+        HBox buttonsBox = new HBox(30);
+        buttonsBox.getChildren().addAll(editButton, doneButton);
+        buttonsBox.setLayoutX(20);
         buttonsBox.setLayoutY(250);
 
         Label appointmentLabel = new Label("Appointment: ");
@@ -109,7 +146,7 @@ public class PatientView extends Application {
         Pane topPane = new Pane();
         topPane.setStyle("-fx-background-color: #F4DED6;");
         topPane.setPrefHeight(350);
-        topPane.getChildren().addAll(contactInfoBox, personalInfoBox, appointmentBox, buttonsBox, chatBox);
+        topPane.getChildren().addAll(contactInfoBox, personalInfoBox, appointmentBox, buttonsBox, bill, chatBox);
 
         Pane bottomPane = new Pane();
         bottomPane.setStyle("-fx-background-color: #B1D3FB;");
@@ -122,7 +159,6 @@ public class PatientView extends Application {
         primaryStage.setScene(scene);
         primaryStage.show();
     }
-
     public static void main(String[] args) {
         launch(args);
     }
