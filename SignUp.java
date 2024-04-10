@@ -54,6 +54,14 @@ public class SignUp extends Application {
         Label passwordLabel = new Label("Password:");
         PasswordField passwordField = new PasswordField();
         passwordField.setPromptText("Enter password");
+        
+        Label phoneLabel = new Label("Phone:");
+        TextField phoneField = new TextField();
+        phoneField.setPromptText("Enter phone number");
+
+        Label addressLabel = new Label("Address:");
+        TextField addressField = new TextField();
+        addressField.setPromptText("Enter address");
 
         gridPane.add(nameLabel, 0, 0);
         gridPane.add(nameField, 1, 0);
@@ -61,6 +69,10 @@ public class SignUp extends Application {
         gridPane.add(emailField, 1, 1);
         gridPane.add(passwordLabel, 0, 2);
         gridPane.add(passwordField, 1, 2);
+        gridPane.add(phoneLabel, 0, 3);
+        gridPane.add(phoneField, 1, 3);
+        gridPane.add(addressLabel, 0, 4);
+        gridPane.add(addressField, 1, 4);
 
         Button signUpButton = new Button("Sign Up");
         signUpButton.setStyle("-fx-background-color: #B1D3FB");
@@ -68,14 +80,17 @@ public class SignUp extends Application {
             String name = nameField.getText();
             String email = emailField.getText();
             String password = passwordField.getText();
-            if (name.isEmpty() || email.isEmpty() || password.isEmpty()) {
+            String phone = phoneField.getText();
+            String address = addressField.getText();
+            
+            if (name.isEmpty() || email.isEmpty() || password.isEmpty() || phone.isEmpty() || address.isEmpty()) {
                 Alert alert = new Alert(Alert.AlertType.ERROR);
                 alert.setTitle("Error");
                 alert.setHeaderText(null);
                 alert.setContentText("Please fill in all the required fields.");
                 alert.showAndWait();
             } else {
-                writeUserData(name, email, password);
+                writeUserData(name, email, password, phone, address);
                 Alert alert = new Alert(Alert.AlertType.INFORMATION);
                 alert.setTitle("Success");
                 alert.setHeaderText(null);
@@ -113,9 +128,9 @@ public class SignUp extends Application {
         primaryStage.show();
     }
 
-    private void writeUserData(String name, String email, String password) {
+    private void writeUserData(String name, String email, String password, String phone, String address) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(USER_DATA_FILE, true))) {
-            writer.write(name + "," + email + "," + password);
+            writer.write(name + "," + email + "," + password + "," + phone + "," + address);
             writer.newLine();
         } catch (IOException e) {
             e.printStackTrace();
