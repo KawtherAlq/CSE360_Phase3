@@ -29,6 +29,67 @@ public class DoctorView extends Application {
         Button notificationButton = new Button("!");
         notificationButton.setLayoutX(10);
         notificationButton.setLayoutY(10);
+        
+        
+        Button selectDoctorButton = new Button("Select Doctor");
+    	selectDoctorButton.setLayoutX(550);
+    	selectDoctorButton.setLayoutY(10);
+    	selectDoctorButton.setOnAction(e -> {
+    		HBox popUpWindow = new HBox(10);
+    		VBox puWindow = new VBox(10);
+    		Button enterButton = new Button("Enter");
+    		Label doctorName = new Label("Doctor's Name or Email: ");
+    		Label errorLabel = new Label("");
+    		errorLabel.setTextFill(Color.RED);
+    		errorLabel.setStyle("-fx-font-weight: bold;");
+    		TextField doctorNameField = new TextField();
+    		popUpWindow.getChildren().addAll(doctorName, doctorNameField);
+    		popUpWindow.setAlignment(Pos.CENTER);
+    		puWindow.getChildren().addAll(popUpWindow, enterButton, errorLabel);
+    		puWindow.setAlignment(Pos.CENTER);
+    	    Scene popup = new Scene(puWindow, 420, 120);
+    	    Stage window = new Stage();
+    	    window.setScene(popup);
+    	    window.initModality(Modality.APPLICATION_MODAL);
+    		window.setTitle("Select Doctor");
+    		window.show();
+    		
+    		enterButton.setOnAction(event -> {
+    			int count;
+    			char at;
+    	        if(doctorNameField.getText().isEmpty()) {
+    	        	errorLabel.setText("No email or name was entered");
+    	        }
+    	        else {
+    	        	try (BufferedReader reader = new BufferedReader(new FileReader("userdata.txt"))) {
+    	                String line;
+    	                count = 0;
+    	                at = '@';
+    	                while ((line = reader.readLine()) != null) {
+    	                    String[] parts = line.split(",");
+    	                    for(int i = 0; i < parts.length; i++) {
+    	                    		if((doctorNameField.getText().equalsIgnoreCase(parts[i])) && (parts[i].contains(String.valueOf(at)))) {
+    	                    			selectDoctorButton.setText("Welcome, Doctor " + parts[i-1] + "!");
+    	                    			count = 1;
+    	                    			window.close();
+    	                    		}
+    	                    		else if(doctorNameField.getText().equalsIgnoreCase(parts[i])) {
+    	                    			selectDoctorButton.setText("Welcome, Doctor " + parts[i] + "!");
+    	                    			count = 1;
+    	                    			window.close();
+    	                    		}
+    	                    }
+    	                }
+    	                if(count == 0) {
+    	                	errorLabel.setText("Name or Email do not exist");
+    	                }
+    	            } catch (IOException ex) {
+    	                ex.printStackTrace();
+    	            }
+    	        }
+    	    });
+    		
+        });
 
         Button selectPatientButton = new Button("Select Patient");
         selectPatientButton.setLayoutX(10);
@@ -92,6 +153,7 @@ public class DoctorView extends Application {
                 }
             });
         });
+        
 
         Label nameLabel = new Label("Name: ");
         nameLabel.setLayoutX(80);
@@ -128,10 +190,17 @@ public class DoctorView extends Application {
         Button callButton = new Button("Call");
         callButton.setLayoutX(617);
         callButton.setLayoutY(110);
+        callButton.setOnAction(e -> {
+			Alert alert = new Alert(Alert.AlertType.INFORMATION);
+			alert.setTitle("Call");
+			alert.setHeaderText(null);
+			alert.setContentText("Patient has been called!");
+			alert.showAndWait();
+    });
 
-        Label doctorNameLabel = new Label("Doctor's Name");
-        doctorNameLabel.setLayoutX(685);
-        doctorNameLabel.setLayoutY(10);
+        //Label doctorNameLabel = new Label("Doctor's Name");
+        //doctorNameLabel.setLayoutX(685);
+        //doctorNameLabel.setLayoutY(10);
 
         TextArea physicalTestTextArea = new TextArea();
         physicalTestTextArea.setPromptText("Physical Test");
@@ -146,6 +215,40 @@ public class DoctorView extends Application {
         prescriptionsTextArea.setPrefSize(235, 250);
 
         Button saveButton = new Button("Save");
+        saveButton.setOnAction(e -> {
+            if (!emailField.getText().isEmpty()) {
+                String emailUser = emailField.getText();
+                int at = emailUser.indexOf('@');
+                String emailUserName = emailUser.substring(0, at);
+                String filename = emailUserName + "_Records.txt";
+                String append = " " + prescriptionsTextArea.getText();
+                if (!prescriptionsTextArea.getText().isEmpty()) {
+                    try (FileWriter writer = new FileWriter(filename, true)) {
+                        writer.write(append);
+                        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                        alert.setTitle("Save");
+                        alert.setHeaderText(null);
+                        alert.setContentText("Information has been saved successfully!");
+                        alert.showAndWait();
+                    } catch (IOException ex) {
+                        ex.printStackTrace();
+                    }
+                } else {
+                    Alert alert = new Alert(Alert.AlertType.WARNING);
+                    alert.setTitle("Save");
+                    alert.setHeaderText(null);
+                    alert.setContentText("No text has been entered, nothing to save");
+                    alert.showAndWait();
+                }
+            } else {
+                Alert alert = new Alert(Alert.AlertType.WARNING);
+                alert.setTitle("Save");
+                alert.setHeaderText(null);
+                alert.setContentText("Information can't be saved if no patient has been selected");
+                alert.showAndWait();
+            }
+        });
+
         ComboBox<String> patientHistoryComboBox = new ComboBox<>();
         patientHistoryComboBox.getItems().addAll("Patient History", "Previous Health Issues", "Previous Prescribed Medications", "History of Immunization", "Other");
         patientHistoryComboBox.setPromptText("Patient History");
@@ -153,6 +256,10 @@ public class DoctorView extends Application {
         patientHistoryComboBox.setLayoutY(15);
 
         Button finishedButton = new Button("Finished");
+        finishedButton.setOnAction(e -> {
+            SignIn signInPage = new SignIn();
+            signInPage.start(primaryStage);
+        });
 
         Button backButton = new Button("back");
         backButton.setOnAction(e -> {
@@ -160,7 +267,7 @@ public class DoctorView extends Application {
             signInPage.showPortal(primaryStage);
         });
 
-        HBox buttonsBox = new HBox(10); // Spacing between buttons
+        HBox buttonsBox = new HBox(10);
         buttonsBox.getChildren().addAll(backButton, saveButton, finishedButton);
         buttonsBox.setLayoutX(560);
         buttonsBox.setLayoutY(260);
@@ -168,7 +275,7 @@ public class DoctorView extends Application {
         Pane topPane = new Pane();
         topPane.setStyle("-fx-background-color: #F4DED6;");
         topPane.setPrefHeight(225);
-        topPane.getChildren().addAll(notificationButton, selectPatientButton, nameLabel, nameField, emailLabel, emailField, phoneLabel, phoneField, addressLabel, callLabel, callButton, addressField, doctorNameLabel);
+        topPane.getChildren().addAll(notificationButton, selectPatientButton, nameLabel, nameField, emailLabel, emailField, phoneLabel, phoneField, addressLabel, callLabel, callButton, addressField, selectDoctorButton);
 
         Pane bottomPane = new Pane();
         bottomPane.setStyle("-fx-background-color: #B1D3FB;");
