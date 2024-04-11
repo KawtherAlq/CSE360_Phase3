@@ -1,5 +1,3 @@
-package application;
-
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -63,6 +61,10 @@ public class SignUp extends Application {
         TextField addressField = new TextField();
         addressField.setPromptText("Enter address");
 
+        Label emergencyLabel = new Label("Emergency Contact");
+        TextField emergencyField = new TextField();
+        emergencyField.setPromptText("Enter Emergency Contact");
+
         gridPane.add(nameLabel, 0, 0);
         gridPane.add(nameField, 1, 0);
         gridPane.add(emailLabel, 0, 1);
@@ -73,6 +75,8 @@ public class SignUp extends Application {
         gridPane.add(phoneField, 1, 3);
         gridPane.add(addressLabel, 0, 4);
         gridPane.add(addressField, 1, 4);
+        gridPane.add(emergencyLabel, 0, 5);
+        gridPane.add(emergencyField, 1, 5);
 
         Button signUpButton = new Button("Sign Up");
         signUpButton.setStyle("-fx-background-color: #B1D3FB");
@@ -82,15 +86,16 @@ public class SignUp extends Application {
             String password = passwordField.getText();
             String phone = phoneField.getText();
             String address = addressField.getText();
+            String emergencyContact = emergencyField.getText();
             
-            if (name.isEmpty() || email.isEmpty() || password.isEmpty() || phone.isEmpty() || address.isEmpty()) {
+            if (name.isEmpty() || email.isEmpty() || password.isEmpty() || phone.isEmpty() || address.isEmpty() || emergencyContact.isEmpty()) {
                 Alert alert = new Alert(Alert.AlertType.ERROR);
                 alert.setTitle("Error");
                 alert.setHeaderText(null);
                 alert.setContentText("Please fill in all the required fields.");
                 alert.showAndWait();
             } else {
-                writeUserData(name, email, password, phone, address);
+                writeUserData(name, email, password, phone, address, emergencyContact);
                 Alert alert = new Alert(Alert.AlertType.INFORMATION);
                 alert.setTitle("Success");
                 alert.setHeaderText(null);
@@ -128,9 +133,9 @@ public class SignUp extends Application {
         primaryStage.show();
     }
 
-    private void writeUserData(String name, String email, String password, String phone, String address) {
+    private void writeUserData(String name, String email, String password, String phone, String address, String emergencyContact) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(USER_DATA_FILE, true))) {
-            writer.write(name + "," + email + "," + password + "," + phone + "," + address);
+            writer.write(name + "," + email + "," + password + "," + phone + "," + address + "," + emergencyContact);
             writer.newLine();
         } catch (IOException e) {
             e.printStackTrace();

@@ -1,5 +1,3 @@
-package application;
-
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.FileReader;
@@ -14,14 +12,13 @@ import javafx.scene.layout.*;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
-
-
 public class DoctorView extends Application {
 	 private static final String CHAT_FILE = "chat.txt";
 	 
     @Override
     public void start(Stage primaryStage) {
         primaryStage.setTitle("Doctor's View");
+
         Button notificationButton = new Button("!");
         notificationButton.setLayoutX(10);
         notificationButton.setLayoutY(10);
@@ -92,17 +89,16 @@ public class DoctorView extends Application {
         patientHistoryComboBox.setLayoutY(15);
 
         Button finishedButton = new Button("Finished");
-        
-        Button backButton = new Button("back");
-        //   backButton.setStyle("-fx-background-color: #B1D3FB");
-             backButton.setOnAction(e -> {
-             SignIn signInPage = new SignIn();
-             signInPage.showPortal(primaryStage);
-         });
 
-        HBox buttonsBox = new HBox(10);
+        Button backButton = new Button("back");
+        backButton.setOnAction(e -> {
+        SignIn signInPage = new SignIn();
+        signInPage.showPortal(primaryStage);
+    });
+
+        HBox buttonsBox = new HBox(10); // Spacing between buttons
         buttonsBox.getChildren().addAll(backButton, saveButton, finishedButton);
-        buttonsBox.setLayoutX(590);
+        buttonsBox.setLayoutX(560);
         buttonsBox.setLayoutY(260);
 
         Pane topPane = new Pane();
@@ -125,7 +121,7 @@ public class DoctorView extends Application {
             TextArea chatHistoryTextArea = new TextArea();
             chatHistoryTextArea.setEditable(false);
             loadChatHistory(chatHistoryTextArea);
-            
+
             TextField chatInputField = new TextField();
             Button sendButton = new Button("Send");
             sendButton.setOnAction(e -> {

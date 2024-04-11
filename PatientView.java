@@ -1,15 +1,9 @@
-package application;
-
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
 import java.io.*;
-
-//import java.nio.file.Files;
-//import java.nio.file.Paths;
-//import java.util.List;
 
 public class PatientView extends Application {
     private static final String CHAT_FILE = "chat.txt";
@@ -27,24 +21,30 @@ public class PatientView extends Application {
 
         Label nameLabel = new Label("Name: ");
         TextField nameField = new TextField();
+        nameField.setDisable(true);
 
         Label emailLabel = new Label("Email: ");
         TextField emailField = new TextField();
+        emailField.setDisable(true);
 
         Label phoneLabel = new Label("Phone: ");
         TextField phoneField = new TextField();
+        phoneField.setDisable(true);
 
         VBox personalInfoLeft = new VBox(10);
         personalInfoLeft.getChildren().addAll(nameLabel, nameField, emailLabel, emailField, phoneLabel, phoneField);
 
         Label addressLabel = new Label("Address: ");
         TextField addressField = new TextField();
+        addressField.setDisable(true);
 
         Label emergencyContactLabel = new Label("Emergency Contact: ");
         TextField emergencyContactField = new TextField();
+        emergencyContactField.setDisable(true);
 
         Label dobLabel = new Label("DOB: ");
         DatePicker dobPicker = new DatePicker();
+        dobPicker.setDisable(true);
 
         VBox personalInfoRight = new VBox(10);
         personalInfoRight.getChildren().addAll(addressLabel, addressField, emergencyContactLabel, emergencyContactField, dobLabel, dobPicker);
@@ -54,12 +54,52 @@ public class PatientView extends Application {
         personalInfoBox.setLayoutX(10);
         personalInfoBox.setLayoutY(50);
 
-        Button editButton = new Button("Edit");
-        Button billingButton = new Button("Billing");
+        try (BufferedReader reader = new BufferedReader(new FileReader("userdata.txt"))) {
+            String line = reader.readLine();
+            if (line != null) {
+                String[] userData = line.split(",");
+                if (userData.length >= 4) {
+                    nameField.setText(userData[0]);
+                    emailField.setText(userData[1]);
+                    phoneField.setText(userData[3]);
+                    addressField.setText(userData[4]);
+                    emergencyContactField.setText(userData[5]);
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
-        HBox buttonsBox = new HBox(150);
-        buttonsBox.getChildren().addAll(editButton, billingButton);
-        buttonsBox.setLayoutX(60);
+        Button editButton = new Button("Edit");
+        editButton.setOnAction(e -> {
+            // Enable text fields when the "Edit" button is clicked
+            nameField.setDisable(false);
+            emailField.setDisable(false);
+            phoneField.setDisable(false);
+            addressField.setDisable(false);
+            emergencyContactField.setDisable(false);
+            dobPicker.setDisable(false);
+        });
+
+        Button doneButton = new Button("Done");
+        doneButton.setOnAction(e -> {
+            nameField.setDisable(true);
+            emailField.setDisable(true);
+            phoneField.setDisable(true);
+            addressField.setDisable(true);
+            emergencyContactField.setDisable(true);
+            dobPicker.setDisable(true);
+        });
+
+        Button billingButton = new Button("Billing"); 
+        HBox bill = new HBox();
+        bill.getChildren().addAll(billingButton);
+        bill.setLayoutX(240);
+        bill.setLayoutY(250);
+
+        HBox buttonsBox = new HBox(30);
+        buttonsBox.getChildren().addAll(editButton, doneButton);
+        buttonsBox.setLayoutX(20);
         buttonsBox.setLayoutY(250);
 
         Label appointmentLabel = new Label("Appointment: ");
@@ -95,6 +135,17 @@ public class PatientView extends Application {
                 prescriptionTextArea, injuriesLabel, injuriesTextArea, backButton);
         medicalHistoryBox.setLayoutX(10);
         medicalHistoryBox.setLayoutY(0);
+
+        // Create Lab Results VBox
+        Label labResultsLabel = new Label("Lab Results");
+        labResultsLabel.setStyle("-fx-font-size: 18px; -fx-font-weight: bold; -fx-alignment: center;");
+        labResultsLabel.setStyle("-fx-font-size: 16px; -fx-font-weight: bold; -fx-alignment: center;");
+        TextArea labResultsTextArea = new TextArea();
+        labResultsTextArea.setPrefSize(465, 525);
+        labResultsTextArea.setPrefSize(465, 430);
+        VBox labResultsBox = new VBox(10, labResultsLabel, labResultsTextArea);
+        labResultsBox.setLayoutX(580);
+        labResultsBox.setLayoutY(10);
 
         // Create Chat VBox
         Label chatLabel = new Label("Chat");
@@ -137,7 +188,7 @@ public class PatientView extends Application {
         Pane bottomPane = new Pane();
         bottomPane.setStyle("-fx-background-color: #B1D3FB;");
         bottomPane.setPrefHeight(550);
-        bottomPane.getChildren().addAll(medicalHistoryBox);
+        bottomPane.getChildren().addAll(medicalHistoryBox, labResultsBox);
 
         VBox vbox = new VBox(topPane, bottomPane);
 
