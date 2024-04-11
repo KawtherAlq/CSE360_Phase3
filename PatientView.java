@@ -6,9 +6,10 @@ import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
 import java.io.*;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.util.List;
+
+//import java.nio.file.Files;
+//import java.nio.file.Paths;
+//import java.util.List;
 
 public class PatientView extends Application {
     private static final String CHAT_FILE = "chat.txt";
