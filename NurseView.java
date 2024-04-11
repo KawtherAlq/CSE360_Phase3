@@ -6,34 +6,21 @@ import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import javafx.scene.control.Button;
 import javafx.scene.layout.StackPane;
-import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
-import javafx.scene.control.TextField;
 import javafx.geometry.Pos;
 import javafx.scene.text.Text;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.FileReader;
 import java.io.FileWriter;
-import java.io.FilterWriter;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.NotSerializableException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.io.PrintWriter;
-import java.io.BufferedReader;
 import java.io.BufferedWriter;
 
 public class NurseView extends Application {
+	 private static final String CHAT_FILE = "chat.txt";
+
 	@Override
 	public void start(Stage primaryStage) {
 		primaryStage.setTitle("Nurse's View");
@@ -55,7 +42,6 @@ private StackPane Nurse(Stage primaryStage) {
     Button backButton;
     Button selectNurseButton;
 
-    //ComboBox<String> selectPatientComboBox;
     ComboBox<String> patientHistoryComboBox;
 
     Label nameLabel;
@@ -70,19 +56,9 @@ private StackPane Nurse(Stage primaryStage) {
     Label phoneBoxLabel;
     Label addressBoxLabel;
     Label patientRecordsLabel;
-  
-    //TextField nameField;
-    //TextField emailField;
-    //TextField phoneField;
-    //TextField addressField;
-    //TextField nurseNameField;
-    
-    Text patientRecordsText;
-    
-    //Image callImage; 
-    //ImageView callImageView;
 
-    //TextArea physicalTestTextArea;
+    Text patientRecordsText;
+
     TextArea prescriptionsTextArea;
 
     notificationButton = new Button("!");
@@ -184,37 +160,6 @@ private StackPane Nurse(Stage primaryStage) {
 	patientRecordsBox.setLayoutX(45);
 	patientRecordsBox.setLayoutY(57);
           
-	//nameField = new TextField();
-	//nameField.setLayoutX(120);
-	//nameField.setLayoutY(110);
-	//emailField = new TextField();
-	//emailField.setLayoutX(120);
-	//emailField.setLayoutY(160);
-	//phoneField = new TextField();
-	//phoneField.setLayoutX(355);
-	//phoneField.setLayoutY(110);
-	//addressField = new TextField();
-	//addressField.setLayoutX(355);
-	//addressField.setLayoutY(160);
-	//nurseNameField = new TextField("Nurse's Name");
-	//nurseNameField.setLayoutX(630);
-	//nurseNameField.setLayoutY(10);
-
-	// Load the image
-	//callImage = new Image("Images/piggy.png"); 
-
-	// Create an image view to display the image
-	//callImageView = new ImageView(callImage);
-	//callImageView.setFitWidth(125);
-	//callImageView.setFitHeight(125);
-	//callImageView.setLayoutX(665);
-	//callImageView.setLayoutY(50);
-
-	//physicalTestTextArea = new TextArea();
-	//physicalTestTextArea.setPromptText("");
-	//physicalTestTextArea.setLayoutX(45);
-	//physicalTestTextArea.setLayoutY(57);
-	//physicalTestTextArea.setPrefSize(300, 198);
 	prescriptionsTextArea = new TextArea();
 	prescriptionsTextArea.setPromptText("Type Here");
 	prescriptionsTextArea.setLayoutX(455);
@@ -239,26 +184,36 @@ private StackPane Nurse(Stage primaryStage) {
 	VBox mainPane = new VBox();
 	mainPane.getChildren().addAll(topPane, bottomPane);
 	
-	notificationButton.setOnAction(e -> {
-		
-		BorderPane popUpWindow = new BorderPane();
-        TextArea messageTextArea = new TextArea();
-        //messageTextArea.setPrefWidth(1);
-        messageTextArea.setPrefHeight(75);
-        Button sendButton = new Button("Send");
-        sendButton.setOnAction(event -> {
-            //String message = messageTextArea.getText();
-            messageTextArea.clear();
-        });
-        popUpWindow.setTop(messageTextArea);
-        popUpWindow.setCenter(sendButton);
-        Scene popup = new Scene(popUpWindow, 420, 120);
-        Stage window = new Stage();
-        window.setScene(popup);
-        window.initModality(Modality.APPLICATION_MODAL);
-        window.setTitle("Nurse's Messages");
-        window.show();
-    });
+	notificationButton.setOnAction(event -> {
+	    Stage chatStage = new Stage();
+	    chatStage.setTitle("Chat with Nurse");
+	    VBox chatLayout = new VBox(10);
+	    TextArea chatHistoryTextArea = new TextArea();
+	    chatHistoryTextArea.setEditable(false);
+	    loadChatHistory(chatHistoryTextArea); // Load chat history here
+	    TextField chatInputField = new TextField();
+	    Button sendButton = new Button("Send");
+	    sendButton.setOnAction(e -> {
+	        String message = chatInputField.getText();
+	        try (BufferedWriter writer = new BufferedWriter(new FileWriter(CHAT_FILE, true))) {
+	            writer.write("Nurse: " + message);
+	            writer.newLine();
+	        } catch (IOException ex) {
+	            ex.printStackTrace();
+	        }
+
+	        if (!message.isEmpty()) {
+	            chatHistoryTextArea.appendText("Nurse: " + message + "\n");
+	            chatInputField.clear();
+	        }
+	    });
+	    chatLayout.getChildren().addAll(chatHistoryTextArea, chatInputField, sendButton);
+	    chatLayout.setAlignment(Pos.CENTER);
+	    Scene chatScene = new Scene(chatLayout, 400, 300);
+	    chatStage.setScene(chatScene);
+	    chatStage.initModality(Modality.APPLICATION_MODAL);
+	    chatStage.show();
+	});
 	
 	selectNurseButton.setOnAction(e -> {
 		HBox popUpWindow = new HBox(10);
@@ -318,20 +273,7 @@ private StackPane Nurse(Stage primaryStage) {
     });
 	
 	messageButton.setOnAction(e -> {
-		//if(phoneField.getText().isEmpty()) {
-		//	Alert alert = new Alert(Alert.AlertType.ERROR);
-		//	alert.setTitle("Call");
-		//	alert.setHeaderText(null);
-		//	alert.setContentText("No phone number has been entered!");
-		//	alert.showAndWait();
-		//}
-		//else {
-			//Alert alert = new Alert(Alert.AlertType.INFORMATION);
-			//alert.setTitle("Call");
-			//alert.setHeaderText(null);
-			//alert.setContentText("Patient has been called!");
-			//alert.showAndWait();
-		//}
+
     });
 	
 	saveButton.setOnAction(e -> {
@@ -416,16 +358,24 @@ private StackPane Nurse(Stage primaryStage) {
 	    });
 		
     });
-	
-	
-	
         
 	StackPane root = new StackPane();
 	root.getChildren().addAll(mainPane);
     return root;
 	
 }
-
+private void loadChatHistory(TextArea chatTextArea) {
+    try (BufferedReader reader = new BufferedReader(new FileReader(CHAT_FILE))) {
+        String line;
+        StringBuilder chatHistory = new StringBuilder();
+        while ((line = reader.readLine()) != null) {
+            chatHistory.append(line).append("\n");
+        }
+        chatTextArea.setText(chatHistory.toString());
+    } catch (IOException e) {
+        e.printStackTrace();
+    }
+}
 	public static void main(String[] args) {
 		launch(args);
 	}
