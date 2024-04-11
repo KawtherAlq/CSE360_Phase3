@@ -2,9 +2,11 @@ package application;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.PrintWriter;
 
 import javafx.application.Application;
 import javafx.geometry.Pos;
@@ -12,15 +14,13 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
+import javafx.scene.text.Text;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 public class DoctorView extends Application {
     private static final String CHAT_FILE = "chat.txt";
-    private TextField nameField;
-    private TextField emailField;
-    private TextField phoneField;
-    private TextField addressField;
 
     @Override
     public void start(Stage primaryStage) {
@@ -90,102 +90,133 @@ public class DoctorView extends Application {
     	    });
     		
         });
+    	
+    	Label nameBoxLabel = new Label("");
+    	Label emailBoxLabel = new Label("");
+    	Label phoneBoxLabel = new Label("");
+    	Label addressBoxLabel = new Label("");
+    	Label patientRecordsLabel = new Label ("");
 
         Button selectPatientButton = new Button("Select Patient");
         selectPatientButton.setLayoutX(10);
         selectPatientButton.setLayoutY(60);
         selectPatientButton.setOnAction(e -> {
-            HBox popUpWindow = new HBox();
-            VBox popWindow = new VBox();
-            Button enterButton = new Button("Enter");
-            Label patientName = new Label("Patient's Name or Email: ");
-            Label errorLabel = new Label("");
-            errorLabel.setTextFill(Color.RED);
-            errorLabel.setStyle("-fx-font-weight: bold;");
-            TextField patientNameField = new TextField();
-            popUpWindow.getChildren().addAll(patientName, patientNameField);
-            popUpWindow.setAlignment(Pos.CENTER);
-            popWindow.getChildren().addAll(popUpWindow, enterButton, errorLabel);
-            popWindow.setAlignment(Pos.CENTER);
-            Scene popup = new Scene(popWindow, 420, 120);
-            Stage window = new Stage();
-            window.setScene(popup);
-            window.initModality(Modality.APPLICATION_MODAL);
-            window.setTitle("Select Patient");
-            window.show();
-
-            enterButton.setOnAction(event -> {
-                int count;
-                char at;
-                if(patientNameField.getText().isEmpty()) {
-                    errorLabel.setText("No email or name was entered");
-                } else {
-                    try (BufferedReader reader = new BufferedReader(new FileReader("userdata.txt"))) {
-                        String line;
-                        count = 0;
-                        at = '@';
-                        while ((line = reader.readLine()) != null) {
-                            String[] parts = line.split(",");
-                            for(int i = 0; i < parts.length; i++) {
-                                if((patientNameField.getText().equalsIgnoreCase(parts[i])) && (parts[i].contains(String.valueOf(at)))) {
-                                    nameField.setText(parts[i-1]);
-                                    emailField.setText(parts[i]);
-                                    phoneField.setText(parts[i+2]);
-                                    addressField.setText(parts[i+3]);
-                                    count = 1;
-                                    window.close();
-                                } else if(patientNameField.getText().equalsIgnoreCase(parts[i])) {
-                                    nameField.setText(parts[i]);
-                                    emailField.setText(parts[i+1]);
-                                    phoneField.setText(parts[i+3]);
-                                    addressField.setText(parts[i+4]);
-                                    count = 1;
-                                    window.close();
-                                }
-                            }
-                        }
-                        if(count == 0) {
-                            errorLabel.setText("Name or Email do not exist");
-                        }
-                    } catch (IOException ex) {
-                        ex.printStackTrace();
-                    }
-                }
-            });
+    		HBox popUpWindow = new HBox(10);
+    		VBox puWindow = new VBox(10);
+    		Button enterButton = new Button("Enter");
+    		Label patientName = new Label("Patient's Name or Email: ");
+    		Label errorLabel = new Label("");
+    		errorLabel.setTextFill(Color.RED);
+    		errorLabel.setStyle("-fx-font-weight: bold;");
+    		TextField patientNameField = new TextField();
+    		popUpWindow.getChildren().addAll(patientName, patientNameField);
+    		popUpWindow.setAlignment(Pos.CENTER);
+    		puWindow.getChildren().addAll(popUpWindow, enterButton, errorLabel);
+    		puWindow.setAlignment(Pos.CENTER);
+    	    Scene popup = new Scene(puWindow, 420, 120);
+    	    Stage window = new Stage();
+    	    window.setScene(popup);
+    	    window.initModality(Modality.APPLICATION_MODAL);
+    		window.setTitle("Select Patient");
+    		window.show();
+    		
+    		enterButton.setOnAction(event -> {
+    			int count;
+    			char at;
+    	        if(patientNameField.getText().isEmpty()) {
+    	        	errorLabel.setText("No email or name was entered");
+    	        }
+    	        else {
+    	        	try (BufferedReader reader = new BufferedReader(new FileReader("userdata.txt"))) {
+    	                String line;
+    	                count = 0;
+    	                at = '@';
+    	                while ((line = reader.readLine()) != null) {
+    	                    String[] parts = line.split(",");
+    	                    for(int i = 0; i < parts.length; i++) {
+    	                    		if((patientNameField.getText().equalsIgnoreCase(parts[i])) && (parts[i].contains(String.valueOf(at)))) {
+    	                    			nameBoxLabel.setText(parts[i-1]);
+    	                    			emailBoxLabel.setText(parts[i]);
+    	                    			phoneBoxLabel.setText(parts[i+2]);
+    	                    			addressBoxLabel.setText(parts[i+3]);
+    	                    			count = 1;
+    	                    			window.close();
+    	                    		}
+    	                    		else if(patientNameField.getText().equalsIgnoreCase(parts[i])) {
+    	                    			nameBoxLabel.setText(parts[i]);
+    	                    			emailBoxLabel.setText(parts[i+1]);
+    	                    			phoneBoxLabel.setText(parts[i+3]);
+    	                    			addressBoxLabel.setText(parts[i+4]);
+    	                    			count = 1;
+    	                    			window.close();
+    	                    		}
+    	                    }
+    	                }
+    	                if(count == 0) {
+    	                	errorLabel.setText("Name or Email do not exist");
+    	                }
+    	            } catch (IOException ex) {
+    	                ex.printStackTrace();
+    	            }
+    	        }
+    	    });
+    		
         });
         
 
         Label nameLabel = new Label("Name: ");
         nameLabel.setLayoutX(80);
         nameLabel.setLayoutY(113);
-        nameField = new TextField();
-        nameField.setLayoutX(120);
-        nameField.setLayoutY(110);
 
         Label emailLabel = new Label("Email: ");
         emailLabel.setLayoutX(83);
         emailLabel.setLayoutY(163);
-        emailField = new TextField();
-        emailField.setLayoutX(120);
-        emailField.setLayoutY(160);
 
         Label phoneLabel = new Label("Phone: ");
         phoneLabel.setLayoutX(315);
         phoneLabel.setLayoutY(113);
-        phoneField = new TextField();
-        phoneField.setLayoutX(355);
-        phoneField.setLayoutY(110);
         
         Label addressLabel = new Label("Address: ");
         addressLabel.setLayoutX(305);
         addressLabel.setLayoutY(163);
-        addressField = new TextField();
-        addressField.setLayoutX(355);
-        addressField.setLayoutY(160);
         
         Label callLabel = new Label("Call Patient: ");
         callLabel.setLayoutX(550);
         callLabel.setLayoutY(113);
+        
+        Rectangle name = new Rectangle(160, 25, Color.WHITE);
+    	name.setStroke(Color.LIGHTGRAY);
+        name.setStrokeWidth(1.5);
+    	StackPane nameBox = new StackPane();
+        nameBox.getChildren().addAll(name, nameBoxLabel);
+        nameBox.setLayoutX(120);
+    	nameBox.setLayoutY(110);
+    	
+    	Rectangle email = new Rectangle(160, 25, Color.WHITE);
+    	email.setStroke(Color.LIGHTGRAY);
+        email.setStrokeWidth(1.5);
+    	StackPane emailBox = new StackPane();
+        emailBox.getChildren().addAll(email, emailBoxLabel);
+        emailBox.setLayoutX(120);
+    	emailBox.setLayoutY(160);
+    	
+    	Rectangle phone = new Rectangle(160, 25, Color.WHITE);
+    	phone.setStroke(Color.LIGHTGRAY);
+        email.setStrokeWidth(1.5);
+    	StackPane phoneBox = new StackPane();
+        phoneBox.getChildren().addAll(phone, phoneBoxLabel);
+        phoneBox.setLayoutX(355);
+    	phoneBox.setLayoutY(110);
+    	
+    	Rectangle address = new Rectangle(160, 25, Color.WHITE);
+    	address.setStroke(Color.LIGHTGRAY);
+        email.setStrokeWidth(1.5);
+    	StackPane addressBox = new StackPane();
+        addressBox.getChildren().addAll(address, addressBoxLabel);
+        addressBox.setLayoutX(355);
+    	addressBox.setLayoutY(160);
+        
+        
 
         Button callButton = new Button("Call");
         callButton.setLayoutX(617);
@@ -216,24 +247,33 @@ public class DoctorView extends Application {
 
         Button saveButton = new Button("Save");
         saveButton.setOnAction(e -> {
-            if (!emailField.getText().isEmpty()) {
-                String emailUser = emailField.getText();
+            if (!emailBoxLabel.getText().isEmpty()) {
+                String emailUser = emailBoxLabel.getText();
                 int at = emailUser.indexOf('@');
                 String emailUserName = emailUser.substring(0, at);
                 String filename = emailUserName + "_Records.txt";
-                String append = " " + prescriptionsTextArea.getText();
-                if (!prescriptionsTextArea.getText().isEmpty()) {
-                    try (FileWriter writer = new FileWriter(filename, true)) {
-                        writer.write(append);
-                        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                        alert.setTitle("Save");
-                        alert.setHeaderText(null);
-                        alert.setContentText("Information has been saved successfully!");
-                        alert.showAndWait();
-                    } catch (IOException ex) {
-                        ex.printStackTrace();
-                    }
-                } else {
+                String append = physicalTestTextArea.getText() +  "\n" + prescriptionsTextArea.getText();
+                if (!prescriptionsTextArea.getText().isEmpty() || !physicalTestTextArea.getText().isEmpty()) {
+					String outMsg = prescriptionsTextArea.getText();
+						try {
+							FileWriter fw = new FileWriter(filename);
+							BufferedWriter bw = new BufferedWriter(fw);
+							PrintWriter outFile = new PrintWriter(bw);
+			
+							outFile.print(append);
+			
+							outFile.close();
+							Alert alert = new Alert(Alert.AlertType.INFORMATION);
+	                        alert.setTitle("Save");
+	                        alert.setHeaderText(null);
+	                        alert.setContentText("Information has been saved successfully!");
+	                        alert.showAndWait();
+	                    } 
+						catch (IOException ex) {
+	                        ex.printStackTrace();
+	                    }
+                } 
+                else {
                     Alert alert = new Alert(Alert.AlertType.WARNING);
                     alert.setTitle("Save");
                     alert.setHeaderText(null);
@@ -251,9 +291,141 @@ public class DoctorView extends Application {
 
         ComboBox<String> patientHistoryComboBox = new ComboBox<>();
         patientHistoryComboBox.getItems().addAll("Patient History", "Previous Health Issues", "Previous Prescribed Medications", "History of Immunization", "Other");
-        patientHistoryComboBox.setPromptText("Patient History");
-        patientHistoryComboBox.setLayoutX(290);
-        patientHistoryComboBox.setLayoutY(15);
+        patientHistoryComboBox.setPromptText("Search");
+        patientHistoryComboBox.setLayoutX(280);
+        patientHistoryComboBox.setLayoutY(0);
+        patientHistoryComboBox.setPrefWidth(240);
+        
+        Rectangle RecordsBox = new Rectangle(240, 225, Color.WHITE);
+    	RecordsBox.setStroke(Color.LIGHTGRAY);
+        RecordsBox.setStrokeWidth(1.5);
+        patientRecordsLabel.setWrapText(true);
+        Text patientRecordsText = new Text(patientRecordsLabel.getText());
+        patientRecordsText.setWrappingWidth(230);
+    	StackPane patientRecordsBox = new StackPane();
+    	patientRecordsBox.getChildren().addAll(RecordsBox, patientRecordsText);
+    	patientRecordsBox.setLayoutX(280);
+    	patientRecordsBox.setLayoutY(25);
+    	
+    	
+    	patientHistoryComboBox.setOnAction(e -> {
+    		patientRecordsText.setText("");
+    		patientRecordsText.setFill(Color.BLACK);
+    		patientRecordsText.setStyle("-fx-font-weight: normal;");
+    		int count = 0;
+    		String mainText = "";
+    		if((!emailBoxLabel.getText().equals(""))) {
+    			String emailUser = emailBoxLabel.getText();
+    	        int at = emailUser.indexOf('@');
+    	        String emailUserName = emailUser.substring(0, at);
+    	        String filename = emailUserName + "_Records.txt";
+    	        File file = new File(filename);
+    	        if(file.exists()) {
+
+    			if(patientHistoryComboBox.getValue().equals("Patient History")) {
+    				try (BufferedReader reader = new BufferedReader(new FileReader(filename))) {
+    					String line;
+    					while ((line = reader.readLine()) != null) {
+    						String[] parts = line.split(":");
+    						if ((parts.length == 2)) {
+    							String category = parts[0].trim();
+    							String option = parts[1].trim();
+    							mainText = mainText + category  + ": " + option + "\n";
+    						}
+    					}
+    					patientRecordsText.setText(mainText);
+    				} 
+    				catch (IOException ex) {
+    					ex.printStackTrace();
+    				}
+    			}
+    			else if(patientHistoryComboBox.getValue().equals("Previous Health Issues")) {
+    				try (BufferedReader reader = new BufferedReader(new FileReader(emailUserName + "_Records.txt"))) {
+    					String line;
+    					while ((line = reader.readLine()) != null) {
+    						String[] parts = line.split(":");
+    						if (((parts.length == 2)) && (count == 0)) {
+    							String category = parts[0].trim();
+    							String option = parts[1].trim();
+    							patientRecordsText.setText(category  + ": " + option + "\n");
+    						}
+    						count++;
+    					}
+    				} 
+    				catch (IOException ex) {
+    					ex.printStackTrace();
+    				}
+    			
+    			}
+    			else if(patientHistoryComboBox.getValue().equals("History of Immunization")) {
+    				try (BufferedReader reader = new BufferedReader(new FileReader(emailUserName + "_Records.txt"))) {
+    					String line;
+    					while ((line = reader.readLine()) != null) {
+    						String[] parts = line.split(":");
+    						if (((parts.length == 2)) && (count == 1)) {
+    							String category = parts[0].trim();
+    							String option = parts[1].trim();
+    							patientRecordsText.setText(category  + ": " + option + "\n");
+    						}
+    						count++;
+    					}
+    				} 
+    					catch (IOException ex) {
+    						ex.printStackTrace();
+    					}
+    			
+    			}
+    			else if(patientHistoryComboBox.getValue().equals("Previous Prescribed Medications")) {
+    				try (BufferedReader reader = new BufferedReader(new FileReader(emailUserName + "_Records.txt"))) {
+    					String line;
+    					while ((line = reader.readLine()) != null) {
+    						String[] parts = line.split(":");
+    						if (((parts.length == 2)) && (count == 2)) {
+    							String category = parts[0].trim();
+    							String option = parts[1].trim();
+    							patientRecordsText.setText(category  + ": " + option + "\n");
+    						}
+    						count++;
+    					}
+    				} 
+    					catch (IOException ex) {
+    						ex.printStackTrace();
+    					}
+    			
+    			}
+    			else {
+    				try (BufferedReader reader = new BufferedReader(new FileReader(emailUserName + "_Records.txt"))) {
+    					String line;
+    					while ((line = reader.readLine()) != null) {
+    						String[] parts = line.split(":");
+    						if (((parts.length == 2)) && (count == 3)) {
+    							String category = parts[0].trim();
+    							String option = parts[1].trim();
+    							patientRecordsText.setText(category  + ": " + option + "\n");
+    						}
+    						count++;
+    					}
+    				} 
+    					catch (IOException ex) {
+    						ex.printStackTrace();
+    					}
+    			
+    			}
+    		}
+    	   else if(!file.exists()) {
+    		   	patientRecordsText.setText("No Patient History Exists");
+   				patientRecordsText.setFill(Color.RED);
+   				patientRecordsText.setStyle("-fx-font-weight: bold;");
+    	  }
+    		}
+    		else {
+    			patientRecordsText.setText("No Patient has been selected");
+    			patientRecordsText.setFill(Color.RED);
+    			patientRecordsText.setStyle("-fx-font-weight: bold;");
+    		}
+    	});
+        
+        
 
         Button finishedButton = new Button("Finished");
         finishedButton.setOnAction(e -> {
@@ -261,7 +433,7 @@ public class DoctorView extends Application {
             signInPage.start(primaryStage);
         });
 
-        Button backButton = new Button("back");
+        Button backButton = new Button("Back");
         backButton.setOnAction(e -> {
             SignIn signInPage = new SignIn();
             signInPage.showPortal(primaryStage);
@@ -275,12 +447,12 @@ public class DoctorView extends Application {
         Pane topPane = new Pane();
         topPane.setStyle("-fx-background-color: #F4DED6;");
         topPane.setPrefHeight(225);
-        topPane.getChildren().addAll(notificationButton, selectPatientButton, nameLabel, nameField, emailLabel, emailField, phoneLabel, phoneField, addressLabel, callLabel, callButton, addressField, selectDoctorButton);
+        topPane.getChildren().addAll(notificationButton, selectPatientButton, nameLabel, nameBox, emailLabel, emailBox, phoneLabel, phoneBox, addressLabel, callLabel, callButton, addressBox, selectDoctorButton);
 
         Pane bottomPane = new Pane();
         bottomPane.setStyle("-fx-background-color: #B1D3FB;");
         bottomPane.setPrefHeight(300);
-        bottomPane.getChildren().addAll(physicalTestTextArea, prescriptionsTextArea, patientHistoryComboBox, buttonsBox);
+        bottomPane.getChildren().addAll(physicalTestTextArea, patientRecordsBox, prescriptionsTextArea, patientHistoryComboBox, buttonsBox);
 
         VBox mainPane = new VBox();
         mainPane.getChildren().addAll(topPane, bottomPane);
