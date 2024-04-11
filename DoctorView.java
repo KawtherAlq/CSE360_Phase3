@@ -92,9 +92,16 @@ public class DoctorView extends Application {
         patientHistoryComboBox.setLayoutY(15);
 
         Button finishedButton = new Button("Finished");
+        
+        Button backButton = new Button("back");
+        //   backButton.setStyle("-fx-background-color: #B1D3FB");
+             backButton.setOnAction(e -> {
+             SignIn signInPage = new SignIn();
+             signInPage.showPortal(primaryStage);
+         });
 
         HBox buttonsBox = new HBox(10);
-        buttonsBox.getChildren().addAll(saveButton, finishedButton);
+        buttonsBox.getChildren().addAll(backButton, saveButton, finishedButton);
         buttonsBox.setLayoutX(590);
         buttonsBox.setLayoutY(260);
 
