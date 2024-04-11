@@ -22,8 +22,6 @@ public class DoctorView extends Application {
     @Override
     public void start(Stage primaryStage) {
         primaryStage.setTitle("Doctor's View");
-        //private static final String CHAT_FILE = "chat.txt";
-
         Button notificationButton = new Button("!");
         notificationButton.setLayoutX(10);
         notificationButton.setLayoutY(10);
@@ -95,7 +93,7 @@ public class DoctorView extends Application {
 
         Button finishedButton = new Button("Finished");
 
-        HBox buttonsBox = new HBox(10); // Spacing between buttons
+        HBox buttonsBox = new HBox(10);
         buttonsBox.getChildren().addAll(saveButton, finishedButton);
         buttonsBox.setLayoutX(590);
         buttonsBox.setLayoutY(260);
@@ -119,6 +117,8 @@ public class DoctorView extends Application {
             VBox chatLayout = new VBox(10);
             TextArea chatHistoryTextArea = new TextArea();
             chatHistoryTextArea.setEditable(false);
+            loadChatHistory(chatHistoryTextArea);
+            
             TextField chatInputField = new TextField();
             Button sendButton = new Button("Send");
             sendButton.setOnAction(e -> {
