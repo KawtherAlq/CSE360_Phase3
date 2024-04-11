@@ -3,6 +3,8 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
@@ -76,6 +78,16 @@ public class SignIn extends Application {
             }
         });
 
+        Image callImage = new Image("file:Images/piggy.png");
+
+        // Create an image view to display the image
+        ImageView callImageView = new ImageView(callImage);
+        callImageView.setFitWidth(125);
+        callImageView.setFitHeight(125);
+
+        StackPane imageContainer = new StackPane(callImageView); // Center the image horizontally and vertically
+        leftSide.getChildren().addAll(imageContainer);
+
         Hyperlink signupLink = new Hyperlink("Don't have an account? Sign Up");
         signupLink.setOnAction(e -> {
             SignUp signUpPage = new SignUp();
@@ -87,6 +99,7 @@ public class SignIn extends Application {
         });
 
         rightSide.getChildren().addAll(signInLabel, gridPane, loginButton, signupLink);
+        
 
         HBox hbox = new HBox();
         hbox.setFillHeight(true);

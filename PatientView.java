@@ -1,6 +1,8 @@
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
 import java.io.*;
@@ -131,6 +133,15 @@ public class PatientView extends Application {
             signInPage.showPortal(primaryStage);
         });
 
+        Image callImage = new Image("file:Images/piggy.png"); 
+
+        // Create an image view to display the image
+        ImageView callImageView = new ImageView(callImage);
+        callImageView.setFitWidth(125);
+        callImageView.setFitHeight(125);
+        callImageView.setLayoutX(900);
+        callImageView.setLayoutY(150);
+
         VBox medicalHistoryBox = new VBox(10, medicalHistoryLabel, allergiesLabel, allergiesTextArea, prescriptionLabel,
                 prescriptionTextArea, injuriesLabel, injuriesTextArea, backButton);
         medicalHistoryBox.setLayoutX(10);
@@ -183,7 +194,7 @@ public class PatientView extends Application {
         Pane topPane = new Pane();
         topPane.setStyle("-fx-background-color: #F4DED6;");
         topPane.setPrefHeight(350);
-        topPane.getChildren().addAll(contactInfoBox, personalInfoBox, appointmentBox, buttonsBox, chatBox);
+        topPane.getChildren().addAll(contactInfoBox, personalInfoBox, appointmentBox, buttonsBox, chatBox, callImageView);
 
         Pane bottomPane = new Pane();
         bottomPane.setStyle("-fx-background-color: #B1D3FB;");

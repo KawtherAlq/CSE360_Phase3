@@ -1,5 +1,3 @@
-package application;
-	
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
@@ -13,24 +11,14 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.geometry.Pos;
 import javafx.scene.text.Text;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.FileReader;
 import java.io.FileWriter;
-import java.io.FilterWriter;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.NotSerializableException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.io.PrintWriter;
-import java.io.BufferedReader;
 import java.io.BufferedWriter;
 
 public class NurseView extends Application {
@@ -178,15 +166,14 @@ private StackPane Nurse(Stage primaryStage) {
 	patientRecordsBox.setLayoutX(45);
 	patientRecordsBox.setLayoutY(57);
 
-	// Load the image
-	//callImage = new Image("Images/piggy.png"); 
+	Image callImage = new Image("file:Images/piggy.png"); 
 
-	// Create an image view to display the image
-	//callImageView = new ImageView(callImage);
-	//callImageView.setFitWidth(125);
-	//callImageView.setFitHeight(125);
-	//callImageView.setLayoutX(665);
-	//callImageView.setLayoutY(50);
+        // Create an image view to display the image
+        ImageView callImageView = new ImageView(callImage);
+        callImageView.setFitWidth(125);
+        callImageView.setFitHeight(125);
+        callImageView.setLayoutX(650);
+        callImageView.setLayoutY(50);
 
 	prescriptionsTextArea = new TextArea();
 	prescriptionsTextArea.setPromptText("Type Here");

@@ -1,5 +1,3 @@
-package application;
-
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -12,6 +10,8 @@ import javafx.application.Application;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
@@ -229,9 +229,14 @@ public class DoctorView extends Application {
 			alert.showAndWait();
     });
 
-        //Label doctorNameLabel = new Label("Doctor's Name");
-        //doctorNameLabel.setLayoutX(685);
-        //doctorNameLabel.setLayoutY(10);
+        Image callImage = new Image("file:Images/piggy.png"); 
+
+        // Create an image view to display the image
+        ImageView callImageView = new ImageView(callImage);
+        callImageView.setFitWidth(125);
+        callImageView.setFitHeight(125);
+        callImageView.setLayoutX(665);
+        callImageView.setLayoutY(50);
 
         TextArea physicalTestTextArea = new TextArea();
         physicalTestTextArea.setPromptText("Physical Test");
@@ -254,7 +259,6 @@ public class DoctorView extends Application {
                 String filename = emailUserName + "_Records.txt";
                 String append = physicalTestTextArea.getText() +  "\n" + prescriptionsTextArea.getText();
                 if (!prescriptionsTextArea.getText().isEmpty() || !physicalTestTextArea.getText().isEmpty()) {
-					String outMsg = prescriptionsTextArea.getText();
 						try {
 							FileWriter fw = new FileWriter(filename);
 							BufferedWriter bw = new BufferedWriter(fw);
